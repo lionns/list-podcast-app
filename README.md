@@ -1,30 +1,55 @@
-# React + TypeScript + Vite
+# Podcast App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Endpoints:
+```txt
+100 Podcasts List -> https://itunes.apple.com/us/rss/toppodcasts/limit=100/genre=1310/json
 
-Currently, two official plugins are available:
+Podcast Info -> https://api.allorigins.win/get?url=${encodeURIComponent('https://itunes.apple.com/lookup?id=${PodcastId}&media=podcast&entity=podcastEpisode&limit=20')}
+```
+### Requisitos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Node JS v12+
+- npm v6+
+- ReactJS / TailwindCSS / React Redux 
 
-## Expanding the ESLint configuration
+### Instalación
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+1. Clonación del repositorio:
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```sh
+git clone https://github.com/lionns/podcast-app.git
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. Navega al directorio del proyecto:
+
+```sh
+cd nombre-del-repo
+```
+
+3. Instalación de dependencias
+
+```sh
+npm install
+```
+
+### Uso
+
+Instrucciones para ejecutar la aplicación en modo desarrollo y producción.
+
+#### Modo Desarrollo
+
+Para iniciar el servidor en modo desarrollo:
+
+```sh
+npm run dev
+```
+
+### Modo producción
+
+Para inciar el servidor en modo producción:
+
+```sh
+npm run build
+npm run preview
+```
+
