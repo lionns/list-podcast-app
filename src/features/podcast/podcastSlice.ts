@@ -1,5 +1,6 @@
 import { createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { createAppSlice } from "../../app/createAppSlice";
+import { formatDateString, formatDurationString } from "./utils";
 
 export interface Podcast {
   id: string;
@@ -66,21 +67,6 @@ const mapPodcasts = (data: any): Podcast[] => {
   );
 };
 
-const formatDateString = (isoDateString: string): string => {
-  const [year, month, day] = isoDateString.split("T")[0].split("-");
-  return `${day}/${month}/${year}`;
-};
-
-const formatDurationString = (numero: string) => {
-  const horas = Math.floor(parseInt(numero) / 3600000);
-  const minutos = Math.floor((parseInt(numero) % 3600000) / 60000);
-  const segundos = Math.floor((parseInt(numero) % 60000) / 1000);
-
-  return `${horas.toString().padStart(2, "0")}:${minutos
-    .toString()
-    .padStart(2, "0")}:${segundos.toString().padStart(2, "0")}`;
-};
-
 const mapEpisodes = (data: any): Episode[] => {
   return data?.map(
     (episode: any) =>
@@ -106,8 +92,8 @@ export const fetchPodcastInfoById = createAsyncThunk(
       )}`
     );
     const data = await response.json();
+    // --- Validar las 24 horas para mantener la información
     const expireDate = now.getHours() + 24;
-    console.log(expireDate);
     localStorage.setItem(
       `podcast_${podcastId}`,
       `{value: ${data.contents}, expiry: ${expireDate}}`
@@ -134,6 +120,20 @@ export const podcastSlice = createAppSlice({
                   .toLocaleLowerCase()
                   .includes(action.payload.toLocaleLowerCase())
             );
+    }),
+    selectEpisode: create.reducer((state, action: PayloadAction<string>) => {
+      const episode = state.selectedPodcast.episodes?.find(
+        (episode) => episode.id == action.payload
+      );
+
+      if (episode) {
+        state.selectedEpisode.id = action.payload;
+        state.selectedEpisode.title = episode.title;
+        state.selectedEpisode.date = episode.date;
+        state.selectedEpisode.description = episode.description;
+        state.selectedEpisode.duration = episode.duration;
+        state.selectedEpisode.episodeUrl = episode.episodeUrl;
+      }
     }),
     getPodcastsAsync: create.asyncThunk(
       async () => {
@@ -165,13 +165,9 @@ export const podcastSlice = createAppSlice({
       .addCase(
         fetchPodcastInfoById.fulfilled,
         (state, action: PayloadAction<{ id: string; episodes: Episode[] }>) => {
-          console.log(action.payload.id);
-
           const infoPodcast = state.filteredPodcasts.find(
             (podcast) => podcast.id === action.payload.id
           );
-
-          console.log(infoPodcast);
 
           if (infoPodcast) {
             state.selectedPodcast.id = action.payload.id;
@@ -185,7 +181,6 @@ export const podcastSlice = createAppSlice({
           state.selectedPodcast.episodes = mapEpisodes(
             action.payload.episodes.slice(1)
           );
-          console.log(action.payload.episodes);
           state.status -= 1;
         }
       )
@@ -199,4 +194,5 @@ export const podcastSlice = createAppSlice({
   },
 });
 
-export const { searchPodcast, getPodcastsAsync } = podcastSlice.actions;
+export const { searchPodcast, getPodcastsAsync, selectEpisode } =
+  podcastSlice.actions;

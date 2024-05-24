@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 import { Episode, Podcast } from "../features/podcast/podcastSlice";
 
 export const EpisodesTable = ({ podcast }: { podcast: Podcast }) => {
@@ -20,7 +21,9 @@ export const EpisodesTable = ({ podcast }: { podcast: Podcast }) => {
         {podcast.episodes?.map((episode: Episode) => (
           <tr key={episode.id}>
             <td scope="row" className="px-6 py-3">
-              <a href="#">{episode.title}</a>
+              <NavLink className="text-blue-500" to={`/podcast/${podcast.id}/episode/${episode.id}`}>
+                {episode.title}
+              </NavLink>
             </td>
             <td className="px-6 py-3">{episode.date}</td>
             <td className="px-6 py-3">{episode.duration}</td>

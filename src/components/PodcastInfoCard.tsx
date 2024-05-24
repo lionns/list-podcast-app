@@ -15,15 +15,9 @@ export const PodcastInfoCard = ({ podcast }: { podcast: Podcast }) => {
         <span className=" italic">by {podcast.author}</span>
       </div>
       <div className="w-full h-[2px] bg-gray-200"></div>
-      <p className="w-full">
+      <p className="w-full break-words">
         <span className="font-bold">Description:</span>
-        <br />
-        <p
-          className="break-words"
-          dangerouslySetInnerHTML={{
-            __html: podcast.description,
-          }}
-        />
+        <br />{podcast.description}
       </p>
     </aside>
   );
