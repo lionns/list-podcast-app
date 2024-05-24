@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import {
-  getPodcastsAsync,
   Podcast,
   searchPodcast,
 } from "./features/podcast/podcastSlice";
@@ -13,11 +12,6 @@ export const App = () => {
   const podcasts: Podcast[] = useAppSelector(
     (state) => state.podcast.filteredPodcasts
   );
-
-  useEffect(() => {
-    dispatch(getPodcastsAsync());
-  }, []);
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     setSearch(event.target.value);
 

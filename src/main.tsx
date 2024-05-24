@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Root } from "./routes/root.tsx";
 import { Provider } from "react-redux";
 import { store } from "./app/store.ts";
+import { PodcastPage } from "./routes/podcastPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -17,7 +18,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/podcast/:podcastId",
-        element: <h1>Podcast page</h1>,
+        element: <PodcastPage />,
       },
       {
         path: "/podcast/:podcastId/episode/:episodeId",

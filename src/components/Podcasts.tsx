@@ -1,4 +1,4 @@
-import { Podcast } from "../types/podcast";
+import { Podcast } from "../features/podcast/podcastSlice";
 import { PodcastCard } from "./PodcastCard";
 
 export const Podcasts = ({ podcasts }: { podcasts: Podcast[] }) => {

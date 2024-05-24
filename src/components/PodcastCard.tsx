@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { Podcast } from "../types/podcast";
+import { Podcast } from "../features/podcast/podcastSlice";
 
 export const PodcastCard = ({ podcast }: { podcast: Podcast }) => (
   <li className="h-full">
