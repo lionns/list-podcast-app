@@ -12,3 +12,14 @@ export const formatDurationString = (numero: string) => {
     .toString()
     .padStart(2, "0")}:${segundos.toString().padStart(2, "0")}`;
 };
+
+export const isFetchingExpired = (podcastId: string): boolean => {
+  const podcastStorage = localStorage.getItem(`podcast_${podcastId}`);
+  if (!podcastStorage) return true;
+  const data = JSON.parse(podcastStorage);
+  
+  const nextUpdate = new Date(data.expiry);
+  const now = new Date();
+
+  return now >= nextUpdate;
+};

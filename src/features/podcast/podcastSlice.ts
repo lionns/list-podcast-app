@@ -1,6 +1,10 @@
 import { createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { createAppSlice } from "../../app/createAppSlice";
-import { formatDateString, formatDurationString } from "./utils";
+import {
+  formatDateString,
+  formatDurationString,
+  isFetchingExpired,
+} from "./utils";
 
 export interface Podcast {
   id: string;
@@ -84,21 +88,33 @@ const mapEpisodes = (data: any): Episode[] => {
 export const fetchPodcastInfoById = createAsyncThunk(
   "podcasts/fetchInfoById",
   async (podcastId: string) => {
-    const now = new Date();
+    const dataFetch = isFetchingExpired(podcastId);
 
-    const response = await fetch(
-      `https://api.allorigins.win/get?url=${encodeURIComponent(
-        `https://itunes.apple.com/lookup?id=${podcastId}&media=podcast&entity=podcastEpisode&limit=20`
-      )}`
-    );
-    const data = await response.json();
-    // --- Validar las 24 horas para mantener la información
-    const expireDate = now.getHours() + 24;
-    localStorage.setItem(
-      `podcast_${podcastId}`,
-      `{value: ${data.contents}, expiry: ${expireDate}}`
-    );
-    const podcastInfo = JSON.parse(data.contents);
+    if (dataFetch) {
+      const response = await fetch(
+        `https://api.allorigins.win/get?url=${encodeURIComponent(
+          `https://itunes.apple.com/lookup?id=${podcastId}&media=podcast&entity=podcastEpisode&limit=20`
+        )}`
+      );
+      const data = await response.json();
+
+      const nextUpdate = new Date();
+      nextUpdate.setHours(nextUpdate.getHours() + 24);
+      localStorage.setItem(
+        `podcast_${podcastId}`,
+        JSON.stringify(
+          {value: data.contents, expiry: nextUpdate.toISOString()}
+        )
+      );
+      const podcastInfo = JSON.parse(data.contents);
+      return { id: podcastId, episodes: podcastInfo.results };
+    }
+
+    const podcastStorage = localStorage.getItem(`podcast_${podcastId}`);
+    const data = podcastStorage ? JSON.parse(podcastStorage) : {};
+    
+    const podcastInfo = JSON.parse(data.value);
+
     return { id: podcastId, episodes: podcastInfo.results };
   }
 );
